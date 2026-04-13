@@ -55,4 +55,4 @@ for h in headings:
         st.warning("Enter both fields")
 
 st.markdown("---")
-st.markdown("Built with ❤️ (Free Demo Version)")
+
