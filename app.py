@@ -1,13 +1,9 @@
 import streamlit as st
 import requests
 from bs4 import BeautifulSoup
-from openai import OpenAI
-
-# Add your API key here
-client = OpenAI(api_key="your_actual_api_key_here")
 
 st.title("AI Landing Page Personalizer 🚀")
-st.markdown("### Improve your landing page using AI + CRO principles")
+st.markdown("### Free version (no API cost)")
 
 ad_text = st.text_area("Enter Ad Content")
 url = st.text_input("Enter Landing Page URL")
@@ -24,32 +20,35 @@ def scrape_page(url):
     except:
         return "", []
 
+def generate_fake_ai(ad, title, headings):
+    return f"""
+🔥 New Headline:
+{ad} - Limited Time Offer!
+
+👉 New CTA:
+Shop Now & Save Big!
+
+✨ Suggestions:
+1. Match headline with ad message
+2. Add urgency (limited time, discount)
+3. Highlight benefits clearly
+"""
+
 if st.button("Generate"):
     if ad_text and url:
-        st.write("Analyzing...")
+        with st.spinner("🔍 Analyzing..."):
+            title, headings = scrape_page(url)
+            output = generate_fake_ai(ad_text, title, headings)
 
-        title, headings = scrape_page(url)
-
-        prompt = f"""
-        Ad: {ad_text}
-        Page Title: {title}
-        Headings: {headings}
-
-        Improve the landing page based on the ad.
-        Give:
-        1. New Headline
-        2. New CTA
-        3. 3 Suggestions
-        """
-
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[{"role": "user", "content": prompt}]
-        )
-
-        output = response.choices[0].message.content
-
-        st.subheader("✨ Output")
+        st.markdown("## 🎯 AI Suggestions")
         st.write(output)
+
+        st.markdown("## 🔄 Before vs After")
+        st.write(f"Original Title: {title}")
+        st.write(f"Headings: {headings}")
+
     else:
         st.warning("Enter both fields")
+
+st.markdown("---")
+st.markdown("Built with ❤️ (Free Demo Version)")
