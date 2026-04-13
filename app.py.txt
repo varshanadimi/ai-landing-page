@@ -1,0 +1,55 @@
+import streamlit as st
+import requests
+from bs4 import BeautifulSoup
+from openai import OpenAI
+
+# Add your API key here
+client = OpenAI(api_key="YOUR_API_KEY_HERE")
+
+st.title("AI Landing Page Personalizer 🚀")
+st.markdown("### Improve your landing page using AI + CRO principles")
+
+ad_text = st.text_area("Enter Ad Content")
+url = st.text_input("Enter Landing Page URL")
+
+def scrape_page(url):
+    try:
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        title = soup.title.string if soup.title else ""
+        headings = [h.get_text() for h in soup.find_all(["h1", "h2"])][:3]
+
+        return title, headings
+    except:
+        return "", []
+
+if st.button("Generate"):
+    if ad_text and url:
+        st.write("Analyzing...")
+
+        title, headings = scrape_page(url)
+
+        prompt = f"""
+        Ad: {ad_text}
+        Page Title: {title}
+        Headings: {headings}
+
+        Improve the landing page based on the ad.
+        Give:
+        1. New Headline
+        2. New CTA
+        3. 3 Suggestions
+        """
+
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}]
+        )
+
+        output = response.choices[0].message.content
+
+        st.subheader("✨ Output")
+        st.write(output)
+    else:
+        st.warning("Enter both fields")
