@@ -45,7 +45,11 @@ if st.button("Generate"):
 
         st.markdown("## 🔄 Before vs After")
         st.write(f"Original Title: {title}")
-        st.write(f"Headings: {headings}")
+        st.markdown("**Headings:**")
+
+for h in headings:
+    if h.strip():
+        st.write(f"• {h}")
 
     else:
         st.warning("Enter both fields")
