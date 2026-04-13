@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from openai import OpenAI
 
 # Add your API key here
-client = OpenAI(api_key="YOUR_API_KEY_HERE")
+client = OpenAI(api_key="your_actual_api_key_here")
 
 st.title("AI Landing Page Personalizer 🚀")
 st.markdown("### Improve your landing page using AI + CRO principles")
